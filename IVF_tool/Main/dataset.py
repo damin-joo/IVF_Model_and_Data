@@ -44,7 +44,6 @@ missing_summary = pd.DataFrame({
 
 print(missing_summary)
 
-
 # Some param only exists for certain circumstances
 # missing_threshold = 0.3  # Define a threshold for missing values
 # data = data.dropna(thresh=(1 - missing_threshold) * len(data), axis=1)  # Drop columns with too many missing values
