@@ -11,6 +11,11 @@ from sklearn.decomposition import PCA
 from sklearn.ensemble import IsolationForest
 
 # Install Libraries
+#pip install pandas
+#pip install numpy
+#pip install matplotlib
+#pip install seaborn
+#pip install scikit-learn
 
 #********************************************************
 # Data pre-processing
@@ -31,7 +36,6 @@ print(f"Summary Stat: {data.describe}")
 ## KNN imputation?
 ## Remove rows/columns with excessive missing values??
 
-
 # Check for missing values in each column
 print("\nMissing Values per Column:")
 missing_count = data.isnull().sum()
@@ -44,12 +48,24 @@ missing_summary = pd.DataFrame({
 
 print(missing_summary)
 
-# Some param only exists for certain circumstances
-# missing_threshold = 0.3  # Define a threshold for missing values
-# data = data.dropna(thresh=(1 - missing_threshold) * len(data), axis=1)  # Drop columns with too many missing values
+# Drop columns that have too many missing values
+# BUT Some param only exists for certain circumstances?
+missing_threshold = 0.3  # Define a threshold for missing values
+data = data.dropna(thresh=(1 - missing_threshold) * len(data), axis=1)  # Drop columns with too many missing values
 
-# imputer = SimpleImputer(strategy="mean")  # Replace "mean" with "median" or "most_frequent" as needed
-# data.iloc[:, :] = imputer.fit_transform(data)
+# Separate numeric and non-numeric columns
+numeric_cols = data.select_dtypes(include=["number"]).columns
+non_numeric_cols = data.select_dtypes(exclude=["number"]).columns
+
+# Fill-in missing numerical columns
+numeric_imputer = SimpleImputer(strategy="mean")
+data[numeric_cols] = numeric_imputer.fit_transform(data[numeric_cols])
+
+# Impute non-numerical columns
+non_numeric_imputer = SimpleImputer(strategy="most_frequent")
+data[non_numeric_cols] = non_numeric_imputer.fit_transform(data[non_numeric_cols])
+
+print("Data Cleaning Finished")
 
 #........................
 # 3.DATA TRANSFORMATION
@@ -59,23 +75,29 @@ scaled_features = scaler.fit_transform(data.select_dtypes(include=np.number))
 data[data.select_dtypes(include=np.number).columns] = scaled_features
 
 # Encoding categorical variables
-encoder = OneHotEncoder(sparse=False)
 categorical_columns = data.select_dtypes(include="object").columns
-encoded_features = pd.DataFrame(encoder.fit_transform(data[categorical_columns]), columns=encoder.get_feature_names_out())
-data = data.drop(columns=categorical_columns).join(encoded_features)
+data[categorical_columns] = data[categorical_columns].astype(str)       # convert to string type
+
+encoder = OneHotEncoder(sparse_output=False)
+encoded_features = pd.DataFrame(encoder.fit_transform(data[categorical_columns]), columns=encoder.get_feature_names_out(categorical_columns))
+data = data.join(encoded_features)
+
+print("Data Transformation Finished")
 
 #........................
 ## 4. DATA REDUCTION
 
 # Remove low-variance features
 low_variance_threshold = 0.01
-variance = data.var()
+data_numeric = data.select_dtypes(include=[np.number])
+variance = data_numeric.var()
+
 low_variance_cols = variance[variance < low_variance_threshold].index
 data = data.drop(columns=low_variance_cols)
 
 # Dimensionality reduction with PCA
 pca = PCA(n_components=0.95)  # Retain 95% variance
-reduced_features = pca.fit_transform(data)
+reduced_features = pca.fit_transform(data_numeric)
 data = pd.DataFrame(reduced_features)
 
 # Selecting only the required columns
@@ -103,20 +125,22 @@ required_columns = [
 ]
 
 # Filter the dataframe to include only the required columns
-data_filtered = data[required_columns]
+existing_columns = data.columns.intersection(required_columns)
+data_filtered = data[existing_columns]
 
+print("Data Reduction Finished")
 #........................
-## 5. DATA SPLIT
-# Train-Test split (80-20, 70-30, 50-50)?
-train, test = train_test_split(data, test_size=0.2, random_state=42)
+# ## 5. DATA SPLIT
+# # Train-Test split (80-20, 70-30, 50-50)?
+# train, test = train_test_split(data, test_size=0.2, random_state=42)
 
-# Validation set (split training data to training and validation sets)
+# # Validation set (split training data to training and validation sets)
 
 
 #........................
 ## 6. SAVE DATA
 # Save the cleaned dataset
-data.to_csv("IVF_tool/Data/training_testing/cleaned_dataset.csv", index=False)
+data.to_csv('IVF_tool/Data/training_testing/cleaned_dataset.csv', index=False)
 print("Data preparation complete. Cleaned dataset saved.")
 
 
