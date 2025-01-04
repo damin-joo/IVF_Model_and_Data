@@ -40,7 +40,7 @@ y = data['Live birth occurrence']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Validation set (split training data to training and validation sets)
-validation = pd.read_excel('IVF_tool/Data/validation/ar-2015-2016.xlsb')
+validation = pd.read_excel('IVF_tool/Data/validation/ar-2015-2016.xlsb', engine='pyxlsb')
 #........................
 ## 3. DEFINE MODEL
 def DecisionTree():
