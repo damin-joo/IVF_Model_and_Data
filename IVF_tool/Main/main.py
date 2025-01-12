@@ -22,27 +22,41 @@ from xgboost import XGBClassifier, plot_importance
 #........................
 ## 1.INIT
 # Load Dataset
-data = pd.read_csv('IVF_tool/Data/training_testing/processed-2017-2018.csv')
+# data = pd.read_csv('IVF_tool/Data/training_testing/processed-2017-2018.csv')
+train_data = pd.read_csv('Data/training_testing/train_2017-2018.csv')
+test_data = pd.read_csv('Data/training_testing/test_2017-2018.csv')
 
 # Basic info of data
-print(f"Dataset Info: {data.info()}")     # column types and non-null counts
-print(f"Dataset Shape: {data.shape}")
-print(f"Dataset Head: {data.head()}")
-print(f"Summary Stat: {data.describe()}")
+# print(f"Dataset Info: {data.info()}")     # column types and non-null counts
+# print(f"Dataset Shape: {data.shape}")
+# print(f"Dataset Head: {data.head()}")
+# print(f"Summary Stat: {data.describe()}")
 
 #........................
 ## 2. DATA SPLIT
 # Split features(x) and labels(y)
-X = data.drop('Live birth occurrence', axis=1)
-y = data['Live birth occurrence']
+# X = data.drop('Live birth occurrence', axis=1)
+# y = data['Live birth occurrence']
+# Define features (X) and target (y)
+# Replace 'target_column' with the actual name of your target variable
+X_train_full = train_data.drop(['success or not'], axis=1)
+y_train_full = train_data['success or not']
+
+X_test_full = test_data.drop(['success or not'], axis=1)
+y_test_full = test_data['success or not']
 
 # Train-Test split (80-20, 70-30, 50-50)?
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X_train_full, y_train_full, test_size=0.2, random_state=42)
 
 # Validation set (split training data to training and validation sets)
-validation = pd.read_excel('IVF_tool/Data/validation/ar-2015-2016.xlsb', engine='pyxlsb')
+validation = pd.read_excel('Data/validation/ar-2015-2016.xlsb', engine='pyxlsb')
+
 #........................
 ## 3. DEFINE MODEL
+def LinearRegression():
+    pass
+
 def DecisionTree():
     model = DecisionTreeClassifier(random_state=42)
     model.fit(X_train, y_train)
@@ -68,7 +82,7 @@ def XGBoost():
     # Plot
     plot_importance(model)
 
-    print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+    print(f"XGBoost Accuracy: {accuracy_score(y_test, y_pred):.2f}")
 
 def TensorFlow():
     model = Sequential([
@@ -79,9 +93,7 @@ def TensorFlow():
 
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    model.fit(X_train, y_train, epochs=50, batch_size=32, validation_split=0.2, verbose=1)
-
-    history = model.fit(...)
+    history = model.fit(X_train, y_train, epochs=50, batch_size=32, validation_split=0.2, verbose=1)
     plt.plot(history.history['accuracy'], label='train accuracy')
     plt.plot(history.history['val_accuracy'], label='validation accuracy')
     plt.legend()
@@ -90,7 +102,7 @@ def TensorFlow():
     loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
     print(f"TensorFlow Accuracy: {accuracy:.2f}")
 
-def Ensemble():
+def Ensemble_DT_XGB():
     ensemble_model = VotingClassifier(estimators=[
         ('dt', DecisionTreeClassifier(random_state=42)),
         ('xgb', XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42))
@@ -107,4 +119,4 @@ TensorFlow()
 
 
 # Ensemble Learning models (Combined Basic ML Models)
-Ensemble()
+Ensemble_DT_XGB()
