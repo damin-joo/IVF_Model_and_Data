@@ -152,19 +152,19 @@ def TensorFlow():
     evaluate_model(y_test, y_pred, y_pred_prob, "TensorFlow")
 
 
-def Ensemble_DT_XGB():
-    estimators = [
-        ('dt', DecisionTreeClassifier()),
-        ('xgb', XGBClassifier(use_label_encoder=False, eval_metric='logloss'))
-    ]
+# def Ensemble_DT_XGB():
+#     estimators = [
+#         ('dt', DecisionTreeClassifier()),
+#         ('xgb', XGBClassifier(use_label_encoder=False, eval_metric='logloss'))
+#     ]
 
-    ensemble_model = VotingClassifier(estimators=estimators, voting='soft')
-    ensemble_model.fit(X_train, y_train)
+#     ensemble_model = VotingClassifier(estimators=estimators, voting='soft')
+#     ensemble_model.fit(X_train, y_train)
 
-    y_pred = ensemble_model.predict(X_test)
-    y_pred_prob = ensemble_model.predict_proba(X_test)[:, 1]
+#     y_pred = ensemble_model.predict(X_test)
+#     y_pred_prob = ensemble_model.predict_proba(X_test)[:, 1]
 
-    evaluate_model(y_test, y_pred, y_pred_prob, "Ensemble Model")
+#     evaluate_model(y_test, y_pred, y_pred_prob, "Ensemble Model")
 
 
 # Run Models
@@ -172,4 +172,3 @@ def Ensemble_DT_XGB():
 # DecisionTree()
 # XGBoost()
 TensorFlow()
-# Ensemble_DT_XGB()

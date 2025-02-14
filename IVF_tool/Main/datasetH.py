@@ -490,15 +490,7 @@ test = pd.concat([X_test, y_test], axis=1)
 
 # Drop
 cols_to_keep = [
-#     'Partner age',
-#     'Patient age at treatment',
-#     'Total number of previous IVF cycles',
-#     'Cause of Infertility',
-#     'Patient ethnicity',
-#     'Total number of previous pregnancies - IVF and DI',
-#     'Partner ethnicity',
-#     'success or not'
-# ]
+
 
     'Patient age at treatment', 
     'Total number of previous IVF cycles', 
@@ -509,11 +501,29 @@ cols_to_keep = [
     'Partner ethnicity', 
     'Partner age', 
     'Cause of Infertility', 
-    'Success or not'
+    'success or not'
+    
+    # 'Partner age',
+    # 'Patient age at treatment',
+    # 'Total number of previous IVF cycles', 
+    # 'Cause of Infertility',
+    # 'success or not'
+
+#     'Partner age',
+#     'Patient age at treatment',
+#     'Total number of previous IVF cycles',
+#     'Cause of Infertility',
+#     'Patient ethnicity',
+#     'Total number of previous pregnancies - IVF and DI',
+#     'Partner ethnicity',
+#     'success or not'
+# ]
 ]
 
 train = train[cols_to_keep]
 test = test[cols_to_keep]
+
+train.info()
 
 # Save the filtered DataFrames to CSV
 train.to_csv('Data/training_testing/train_2017-2018.csv', index=False)
