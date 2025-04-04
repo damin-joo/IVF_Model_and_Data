@@ -28,8 +28,8 @@ from sklearn.metrics import classification_report, accuracy_score, precision_sco
 ## 1.INIT
 # Load Dataset
 # data = pd.read_csv('IVF_tool/Data/training_testing/processed-2017-2018.csv')
-train_data = pd.read_csv('Data/training_testing/train_2017-2018.csv')
-test_data = pd.read_csv('Data/training_testing/test_2017-2018.csv')
+train_data = pd.read_csv('IVF_tool/Data/training_testing/train_2017-2018.csv')
+test_data = pd.read_csv('IVF_tool/Data/training_testing/test_2017-2018.csv')
 
 # Basic info of data
 # print(f"Dataset Info: {data.info()}")     # column types and non-null counts
@@ -55,7 +55,7 @@ y_test_full = test_data['success or not']
 X_train, X_test, y_train, y_test = train_test_split(X_train_full, y_train_full, test_size=0.2, random_state=42)
 
 # Validation set (split training data to training and validation sets)
-validation = pd.read_excel('Data/validation/ar-2015-2016.xlsb', engine='pyxlsb')
+validation = pd.read_excel('IVF_tool/Data/validation/ar-2015-2016.xlsb', engine='pyxlsb')
 
 #........................
 ## 2.5 EVALUATE MODEL

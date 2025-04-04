@@ -4,7 +4,7 @@ import pandas as pd
 import seaborn as sns
 
 #LOAD DATA
-df= pd.read_excel('Data/original/ar-2017-2018.xlsx', sheet_name='Anonymised register')
+df= pd.read_excel('IVF_tool/Data/original/ar-2017-2018.xlsx', sheet_name='Anonymised register')
 
 df.head(10)
 
@@ -180,7 +180,7 @@ df_selected_feature['Partner age'] = df_selected_feature['Partner age'].map(PART
 
 df_selected_feature['Patient ethnicity'].unique()
 
- #Define mapping for partner ethnicities
+ #Define mapping for patient ethnicities
 TPEmap = {'Other': 0, 'Black': 1, 'White': 2, 'Asian': 3, 'Mixed': 4}
 
 # Apply mapping and ensure integer type while handling unmapped values
@@ -490,17 +490,17 @@ test = pd.concat([X_test, y_test], axis=1)
 
 # Drop
 cols_to_keep = [
-
-
     'Patient age at treatment', 
+    'Patient ethnicity', 
+    'Partner age', 
+    'Partner ethnicity', 
+    'Cause of Infertility', 
     'Total number of previous IVF cycles', 
     'Total number of previous DI cycles', 
     'Total number of previous pregnancies - IVF and DI', 
     'Specific treatment type', 
-    'Patient ethnicity', 
-    'Partner ethnicity', 
-    'Partner age', 
-    'Cause of Infertility', 
+    'Egg source',
+    'Sperm source',
     'success or not'
     
     # 'Partner age',
@@ -526,7 +526,7 @@ test = test[cols_to_keep]
 train.info()
 
 # Save the filtered DataFrames to CSV
-train.to_csv('Data/training_testing/train_2017-2018.csv', index=False)
-test.to_csv('Data/training_testing/test_2017-2018.csv', index=False)
+train.to_csv('IVF_tool/Data/training_testing/train_2017-2018.csv', index=False)
+test.to_csv('IVF_tool/Data/training_testing/test_2017-2018.csv', index=False)
 
 print("Filtered train and test datasets saved successfully.")
