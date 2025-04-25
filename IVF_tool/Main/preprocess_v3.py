@@ -213,9 +213,7 @@ cols_to_keep_2 = [
 
 cols_to_keep = [
     'Patient age at treatment',
-    'Patient ethnicity',
     'Partner age',
-    'Partner ethnicity',
     'Total number of previous IVF cycles',
     'Stimulation Used',
     'Elective single embryo transfer',  
