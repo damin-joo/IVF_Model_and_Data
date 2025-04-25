@@ -95,7 +95,6 @@ df_selected_target
 #COMBINE ALL COLUMNS, if there is any number 1 in a row, then it will be added as successful birth
 # create a list of our conditions
 conditions = [
-    (df_selected_target['Total number of previous live births - IVF or DI'] == 1) |
     (df_selected_target['Number of live births'] == 1) |
     (df_selected_target['Live birth occurrence'] == 1)
     ]

@@ -1,63 +1,47 @@
-# Import Libaries
-import os
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
-
-import tensorflow as tf
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 
-from sklearn.datasets import load_iris
-from sklearn.linear_model import LinearRegression
+# Sklearn and other required modules
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, log_loss, roc_curve, confusion_matrix
 from sklearn.tree import DecisionTreeClassifier
+from xgboost import XGBClassifier
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-from xgboost import XGBClassifier, plot_importance
-from sklearn.metrics import classification_report, accuracy_score, precision_score, recall_score, f1_score, log_loss, roc_auc_score, roc_curve
 
-# Install Libraries
-#pip install tensorflow
-#pip install xgboost
-
-#********************************************************
+# ********************************************************
 # ML Training and Testing
-#........................
-## 1.INIT
+# ........................
+## 1. INIT
 # Load Dataset
-# data = pd.read_csv('IVF_tool/Data/training_testing/processed-2017-2018.csv')
 train_data = pd.read_csv('IVF_tool/Data/training_testing/train_2017-2018.csv')
 test_data = pd.read_csv('IVF_tool/Data/training_testing/test_2017-2018.csv')
 
-# Basic info of data
-# print(f"Dataset Info: {data.info()}")     # column types and non-null counts
-# print(f"Dataset Shape: {data.shape}")
-# print(f"Dataset Head: {data.head()}")
-# print(f"Summary Stat: {data.describe()}")
-
-#........................
-## 2. DATA SPLIT
-# Split features(x) and labels(y)
-# X = data.drop('Live birth occurrence', axis=1)
-# y = data['Live birth occurrence']
+# ........................
+# 2. DATA SPLIT
 # Define features (X) and target (y)
-# Replace 'target_column' with the actual name of your target variable
-X_train_full = train_data.drop(['success or not'], axis=1)
-y_train_full = train_data['success or not']
+# X_train_full = train_data.drop(['success or not'], axis=1)
+# y_train_full = train_data['success or not']
+# X_test_full = test_data.drop(['success or not'], axis=1)
+# y_test_full = test_data['success or not']
 
-X_test_full = test_data.drop(['success or not'], axis=1)
-y_test_full = test_data['success or not']
+# v2
+X_train_full = train_data.drop(['Live birth occurrence'], axis=1)
+y_train_full = train_data['Live birth occurrence']
+X_test_full = test_data.drop(['Live birth occurrence'], axis=1)
+y_test_full = test_data['Live birth occurrence']
 
-# Train-Test split (80-20, 70-30, 50-50)?
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Train-Test split (80-20)
 X_train, X_test, y_train, y_test = train_test_split(X_train_full, y_train_full, test_size=0.2, random_state=42)
 
-# Validation set (split training data to training and validation sets)
-validation = pd.read_excel('IVF_tool/Data/validation/ar-2015-2016.xlsb', engine='pyxlsb')
+X_train = X_train.reset_index(drop=True)
+y_train = y_train.reset_index(drop=True)
 
-#........................
+# ........................
 ## 2.5 EVALUATE MODEL
 def evaluate_model(y_test, y_pred, y_pred_prob, model_name):
     accuracy = accuracy_score(y_test, y_pred)
@@ -121,20 +105,6 @@ def XGBoost():
     evaluate_model(y_test, y_pred, y_pred_prob, "XGBoost")
 
 def TensorFlow():
-    # model = Sequential([
-    #     Dense(128, activation='relu', input_shape=(X_train.shape[1],)),
-    #     Dense(64, activation='relu'),
-    #     Dense(1, activation='sigmoid')
-    # ])
-
-    # model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-    # history = model.fit(X_train, y_train, epochs=30, batch_size=32, validation_split=0.2, verbose=1)
-
-    # y_pred_prob = model.predict(X_test).flatten()
-    # y_pred = (y_pred_prob > 0.5).astype(int)
-
-    # evaluate_model(y_test, y_pred, y_pred_prob, "TensorFlow")
-
     model = Sequential([
         Dense(128, activation='relu', input_shape=(X_train.shape[1],)),
         Dense(64, activation='relu'),
@@ -151,24 +121,13 @@ def TensorFlow():
 
     evaluate_model(y_test, y_pred, y_pred_prob, "TensorFlow")
 
-
-# def Ensemble_DT_XGB():
-#     estimators = [
-#         ('dt', DecisionTreeClassifier()),
-#         ('xgb', XGBClassifier(use_label_encoder=False, eval_metric='logloss'))
-#     ]
-
-#     ensemble_model = VotingClassifier(estimators=estimators, voting='soft')
-#     ensemble_model.fit(X_train, y_train)
-
-#     y_pred = ensemble_model.predict(X_test)
-#     y_pred_prob = ensemble_model.predict_proba(X_test)[:, 1]
-
-#     evaluate_model(y_test, y_pred, y_pred_prob, "Ensemble Model")
-
-
-# Run Models
-# LR()
-# DecisionTree()
-# XGBoost()
-TensorFlow()
+# ........................
+# 4. RUN MODELS
+def run():
+    print("Running models...")
+    LR()
+    DecisionTree()
+    XGBoost()
+    TensorFlow()
+    print("All models have been run.")
+run()
