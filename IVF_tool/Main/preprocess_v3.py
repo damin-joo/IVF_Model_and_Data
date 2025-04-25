@@ -227,8 +227,8 @@ cols_to_keep = [
 # Ensure train and test have the expected columns:
 print("Train columns before filtering:", train_final.columns.tolist())
 
-train = train_final[[col for col in cols_to_keep_1 if col in test_final.columns]]
-test = test_final[[col for col in cols_to_keep_1 if col in test_final.columns]]
+train = train_final[[col for col in cols_to_keep if col in test_final.columns]]
+test = test_final[[col for col in cols_to_keep if col in test_final.columns]]
 
 # # Final check before saving
 # print("Missing values in train dataset by column:")
