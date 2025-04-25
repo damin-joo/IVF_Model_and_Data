@@ -125,9 +125,9 @@ def TensorFlow():
 # 4. RUN MODELS
 def run():
     print("Running models...")
-    LR()
-    DecisionTree()
-    XGBoost()
+    # LR()
+    # DecisionTree()
+    # XGBoost()
     TensorFlow()
     print("All models have been run.")
 run()

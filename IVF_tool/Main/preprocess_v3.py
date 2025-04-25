@@ -211,6 +211,19 @@ cols_to_keep_2 = [
     'Live birth occurrence'
 ]
 
+cols_to_keep = [
+    'Patient age at treatment',
+    'Patient ethnicity',
+    'Partner age',
+    'Partner ethnicity',
+    'Total number of previous IVF cycles',
+    'Stimulation Used',
+    'Elective single embryo transfer',  
+    'Egg source',
+    'Sperm source',
+    'Live birth occurrence'
+]
+
 # Ensure train and test have the expected columns:
 print("Train columns before filtering:", train_final.columns.tolist())
 
